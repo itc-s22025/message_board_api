@@ -1,8 +1,11 @@
+import s from '../styles/Home.module.css'
 
 const Home = () => {
     return(
         <>
-            <h1>HOME</h1>
+            <div className={s.all}>
+                <h1>HOME</h1>
+            </div>
         </>
     )
 }

@@ -1,5 +1,7 @@
 import {useState, useEffect} from "react";
 import {useRouter} from "next/router";
+import s from '../styles/login.module.css'
+import Link from "next/link";
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -33,17 +35,23 @@ const Signup = () => {
 
     return(
         <>
-            <h1>新規ユーザー登録</h1>
-            <div>
-                <label>User ID</label>
-                <input type="text" placeholder="user ID" value={name} onChange={(e) => setName(e.target.value)} />
-                <p>{name}</p>
+            <h1 className={s.title}>SIGN UP</h1>
+            <div className={s.frame}>
+                <div className={s.flex}>
+                    <label className={s.label}>User ID</label>
+                    <input type="text" placeholder="user ID" value={name} onChange={(e) => setName(e.target.value)} className={s.input}/>
+                </div>
+                <div className={s.flex}>
+                    <label className={s.label}>Password</label>
+                    <input type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} className={s.input}/>
+                </div>
+                <input type="submit" value="SIGN UP" onClick={handleSubmit} className={s.submit}/>
+                <div>
+                    <Link href="/login">
+                        <button className={s.toNext}>＜＜ログイン画面に戻る</button>
+                    </Link>
+                </div>
             </div>
-            <div>
-                <label>Password</label>
-                <input type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-            </div>
-            <input type="submit" value="SIGN UP" onClick={handleSubmit}/>
         </>
     )
 }

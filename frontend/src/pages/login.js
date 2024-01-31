@@ -33,21 +33,21 @@ const Login = () => {
 
     return (
         <>
-            <h1>ログイン</h1>
+            <h1 className={s.title}>LOGIN</h1>
             <div className={s.frame}>
-                <div>
-                    <label>User ID</label>
-                    <input type="text" placeholder="user ID" value={name} onChange={(e) => setName(e.target.value)}/>
+                <div className={s.flex}>
+                    <label className={s.label}>User ID</label>
+                    <input type="text" placeholder="user ID" value={name} onChange={(e) => setName(e.target.value)} className={s.input}/>
                 </div>
-                <div>
-                    <label>Password</label>
+                <div className={s.flex}>
+                    <label className={s.label}>Password</label>
                     <input type="password" placeholder="password" value={password}
-                           onChange={(e) => setPassword(e.target.value)}/>
+                           onChange={(e) => setPassword(e.target.value)} className={s.input}/>
                 </div>
-                <input type="submit" value="LOGIN" onClick={handleSubmit}/>
+                <input type="submit" value="LOGIN" onClick={handleSubmit} className={s.submit}/>
                 <div>
                     <Link href="/signup">
-                        <button>新規登録はここから＞＞</button>
+                        <button className={s.toNext}>新規登録はここから＞＞</button>
                     </Link>
                 </div>
             </div>
