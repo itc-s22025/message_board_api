@@ -1,0 +1,10 @@
+.frame{
+    position: absolute;
+    left: 30vw;
+    top: 10vw;
+    border: 2px solid #373744;
+    border-radius: 10px;
+    height: 150px;
+    width: 300px;
+    padding: 30px;
+}
