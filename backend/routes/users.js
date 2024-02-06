@@ -7,22 +7,28 @@ const { PrismaClient } = require('@prisma/client');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get('/', (req, res, next) => {
-  res.redirect("/users/login")
-})
 
 // ログイン認証
 router.post('/login', passport.authenticate('local', {
   // 認証通った場合
   successReturnToOrRedirect: '/',
   // 失敗した場合
-  failureRedirect: '/login',
+  failureRedirect: '/error',
   // 失敗したときのメッセージ 上で指定したmessageがでる
   failureMessage: true,
-  // これないとreturntoが効かない？
-  keepSessionInfo: true
+  // これないとreturn toが効かない？
+  keepSessionInfo: true,
+  //deserializeのやつ?
+  session: true
 }));
 
+router.get('/error', (req, res, next) => {
+  res.status(401).json({message: "name and/or password is invalid..."})
+})
+
+router.get('/', (req, res, next) => {
+  res.redirect("/users/check")
+})
 
 // ログイン表示
 router.get('/login', async (req, res, next) => {
@@ -68,18 +74,35 @@ router.post('/signup', [
 //ログインチェックミドルウェア
 router.use((req, res, next) => {
   if (!req.user){
+    console.log("ろぐいんしてない")
+    console.log(req.user)
     //未ログインだったときに返すメッセージ
-    res.status(401).json({message: "ログインしてないです"});
+    res.status(401).json({message: "ログインしてないですよ"});
     return
   }
   //ログインされていたら次の処理へ
   next();
 })
 
-//単純にクライアント側でログイン状態をチェックする用
-//ログインしてなかったら上の400が表示される
+//単純にクライアント側でログイン状態をチェックする用 ログインしてなかったら上の400が表示される
 router.get("/check", (req, res, next) => {
   res.json({message: "ok", result: req.user.name});
 });
+
+//ログアウト処理
+router.post("/logout",(req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/login");
+  });
+});
+
+router.get("/logout", (req, res, next) => {
+  res.json({message: "logout", result: req.user.name});
+});
+
+
 
 module.exports = router;

@@ -12,6 +12,7 @@ const Login = () => {
         try {
             const res = await fetch("http://localhost:3030/users/login", {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -20,14 +21,16 @@ const Login = () => {
                 })
             })
             if (res.status === 200) {
+                console.log(res)
                 console.log("ろぐいんできた!!!!!!!!")
-                router.push("/")
+                router.push("/home")
             } else {
+                console.log(res)
                 console.log("できなかった........")
                 router.push("/login")
             }
         } catch (e) {
-            console.error("ERRORRRRRRR:::: ".e)
+            console.error("エラ: ", e)
         }
     };
 

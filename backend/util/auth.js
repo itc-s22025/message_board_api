@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const LocalStrategy = require("passport-local").Strategy;
 const {PrismaClient} = require("@prisma/client");
 
+
 //scrypt関連の定数値
 const N = Math.pow(2, 17);
 const maxmem = 144 * 1024 * 1024;
@@ -38,10 +39,10 @@ const config = (passport) => {
     // データベースに問い合わせてユーザ名:パスワードをチェックして認証する部分
     passport.use(new LocalStrategy({
         usernameField: "name", passwordField: "password"
-    }, async (name, password, done) => {
+    }, async (username, password, done) => {
         try {
             const user = await prisma.user.findUnique({
-                where: {name: name}
+                where: {name: username}
             });
             if (!user) {
                 // そんなユーザいないよの場合
@@ -58,16 +59,29 @@ const config = (passport) => {
             return done(e);
         }
     }));
+
+    //ユーザーが認証されたとき(passport.authenticateが成功したとき)
     // セッションストレージにユーザデータを保存するときに呼ばれる
     passport.serializeUser((user, done) => {
         process.nextTick(() => {
+            console.log("Serialize User:", user);
             done(null, {id: user.id, name: user.name});
         });
     });
+
+    //次のリクエストがあるとき
     // セッションストレージからデータを引っ張ってくるときに呼ばれる
     passport.deserializeUser((user, done) => {
         process.nextTick(() => {
-            return done(null, user);
+            try {
+                // デシリアライズの処理
+                console.log("Deserialize User:", user);
+                done(null, user);
+            } catch (err) {
+                // エラーハンドリング
+                console.error("Deserialize User Error:", err);
+                done(err);
+            }
         });
     });
 
@@ -82,3 +96,4 @@ const config = (passport) => {
 };
 
 module.exports = {generateSalt, calcHash, config};
+

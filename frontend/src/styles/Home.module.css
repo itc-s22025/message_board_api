@@ -1,3 +1,66 @@
 .all{
+  /*background-color: #008cff;*/
+  text-align: center;
+  /*width: 1000px;*/
+  align-items: center;
+}
+
+.head{
+  /*border: 1px solid #ccc;*/
+  /*width: 500px;*/
+  height: 60px;
+}
+
+.text{
+  outline: none;
+  border: 1px solid;
+  border-radius: 10px;
+  width: 500px;
+  height: 100px;
+  font-size: 1rem;
+}
+
+.send{
+  border: none;
+  width: 90px;
+  height: 90px;
+  border-radius: 100%;
+  margin-left: 10px;
+}
+
+.send:hover{
   background-color: #008cff;
+  color: white;
+}
+
+.send:active{
+  background-color: #0066ff;
+}
+
+.flex{
+  display: flex;
+  text-align: center;
+}
+
+.message{
+  border: 1px solid;
+  margin: 20px;
+  width: 500px;
+  max-height: 100px;
+  background-color: white;
+  font-size: 1rem;
+}
+
+.user{
+  /*font-size: 0.8rem;*/
+  background-color: #008cff;
+}
+
+.line{
+  /*border: #008cff 1px solid;*/
+}
+
+.logout{
+  width: 100px;
+  height: 50px;
 }
