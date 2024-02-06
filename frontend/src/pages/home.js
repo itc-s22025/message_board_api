@@ -27,9 +27,6 @@ const Home = () => {
             const res = await fetch("http://localhost:3030/users/logout", {
                 method: 'POST',
                 credentials: 'include',
-                // headers:{
-                //     'Content=Type': 'application/json'
-                // },
             }).then(
                 res => {
                     if (!res.ok){

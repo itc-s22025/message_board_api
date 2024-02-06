@@ -1,32 +1,37 @@
 import s from '../styles/Home.module.css'
 import Link from "next/link";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 
 const App = () => {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
-    const buttonClick = async () => {
+
+    const check = async () => {
         try {
             const res = await fetch("http://localhost:3030/users/check", {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            console.log(res)
+                credentials: 'include',
+            }).then(
+                res => {
+                    if (!res.ok) {
+                        window.location.href = "/login"
+                    } else {
+                        window.location.href = "/home"
+                    }
+                })
         } catch (e) {
-            console.error("エラ: ",e)
+            console.log('error--->', e)
         }
-    }
+    };
+
+    useEffect(() => {
+        check()
+    }, []);
 
     return (
         <>
-            <div className={s.all}>
-                <h1>HOME</h1>
-                    <button>クリック</button>
-            </div>
         </>
     )
 }
