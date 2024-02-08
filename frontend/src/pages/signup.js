@@ -20,12 +20,11 @@ const Signup = () => {
                     name, password
                 })
             })
-            if (res.status === 200){
+            if (res.status === 201){
                 console.log("SUCCESSSSS!!!!!!!!")
-                router.push("/login")
+                window.location.href = "/login"
             }else {
                 console.log("FAilED........")
-                router.push("/signup")
             }
         } catch (e) {
             console.error("ERRORRRRRRR:::: ".e)
