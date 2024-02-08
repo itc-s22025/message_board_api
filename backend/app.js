@@ -1,3 +1,4 @@
+const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -11,11 +12,17 @@ const passportConfig = config(passport);
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const apiRouter = require('./routes/api');
+const messagesRouter = require('./routes/message');
 
 const app = express();
 //cors
-app.use(cors());
+app.use(cors(
+    {
+        origin: "http://localhost:3000",
+        credentials: true,
+        sameSite: "None",
+    }
+));
 
 //
 app.use(logger('dev'));
@@ -25,15 +32,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //axios bypass
-app.use('/axios', express.static(path.join(
-    __dirname, "node_modules", "axios", "dist"
-)));
-
-//テストデータ
-app.get("/test", (req, res, next) => {
-    res.json({test: "テストメッセージ"});
-});
-
+// app.use('/axios', express.static(path.join(
+//     __dirname, "node_modules", "axios", "dist"
+// )));
 
 //sessionの設定
 app.use(session({
@@ -42,13 +43,46 @@ app.use(session({
     saveUninitialized: false,
     cookie: {maxAge: 60 * 60 * 1000}
 }))
+
 //passport
 app.use(passport.authenticate("session"));
 //importしたauth.js
 app.use(passportConfig);
 
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api', apiRouter);
+app.use('/messages', messagesRouter);
+
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    next(createError(404));
+});
+
+// error handler
+// app.use((err, req, res, next) => {
+//     // set locals, only providing error in development
+//     res.locals.message = err.message;
+//     res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//     // render the error page
+//     res.status(err.status || 500);
+//     res.render('error');
+// });
+
+const errorHandler = (err, req, res, next) => {
+    console.dir(err);
+    let message = "Internal server error";
+    if (err.status === 401){
+        //ログインに失敗したとき
+        message = "ログインしてないよ"
+    }else {
+        console.error(err);
+    }
+    res.status(err.status || 500).json({message});
+};
+
+app.use(errorHandler)
 
 module.exports = app;

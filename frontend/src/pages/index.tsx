@@ -1,10 +1,39 @@
+import s from '../styles/Home.module.css'
+import Link from "next/link";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 
-const Home = () => {
-    return(
+const App = () => {
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+    const router = useRouter();
+
+    const check = async () => {
+        try {
+            const res = await fetch("http://localhost:3030/users", {
+                method: 'GET',
+                credentials: 'include',
+            }).then(
+                res => {
+                    if (!res.ok) {
+                        window.location.href = "/login"
+                    } else {
+                        window.location.href = "/home"
+                    }
+                })
+        } catch (e) {
+            console.log('error--->', e)
+        }
+    };
+
+    useEffect(() => {
+        check()
+    }, []);
+
+    return (
         <>
-            <h1>HOME</h1>
         </>
     )
 }
 
-export default Home
+export default App
