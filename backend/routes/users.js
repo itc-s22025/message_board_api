@@ -26,10 +26,6 @@ router.get('/error', (req, res, next) => {
   res.status(401).json({message: "name and/or password is invalid..."})
 })
 
-router.get('/', (req, res, next) => {
-  res.redirect("/users/check")
-})
-
 // ログイン表示
 router.get('/login', async (req, res, next) => {
   try {
@@ -85,8 +81,8 @@ router.use((req, res, next) => {
 })
 
 //単純にクライアント側でログイン状態をチェックする用 ログインしてなかったら上の400が表示される
-router.get("/check", (req, res, next) => {
-  res.json({message: "ok", result: req.user.name});
+router.get("/", (req, res, next) => {
+  res.json({message: "ok", name: req.user.name, id: +req.user.id});
 });
 
 //ログアウト処理
@@ -100,7 +96,7 @@ router.post("/logout",(req, res, next) => {
 });
 
 router.get("/logout", (req, res, next) => {
-  res.json({message: "logout", result: req.user.name});
+  res.json({message: "これが見れるならまだログインしてるよ", result: req.user.name});
 });
 
 
