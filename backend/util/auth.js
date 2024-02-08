@@ -1,6 +1,7 @@
-const crypto = require("crypto");
-const LocalStrategy = require("passport-local").Strategy;
-const {PrismaClient} = require("@prisma/client");
+import crypto from "node:crypto";
+import {Strategy as LocalStrategy} from "passport-local";
+import {PrismaClient} from "@prisma/client";
+
 
 
 //scrypt関連の定数値
@@ -13,7 +14,7 @@ const saltSize = 64;
  * Salt用のランダムバイト列生成
  * @return {Buffer}
  */
-const generateSalt = () => crypto.randomBytes(saltSize);
+export const generateSalt = () => crypto.randomBytes(saltSize);
 
 /**
  * パスワードハッシュ値計算
@@ -21,7 +22,7 @@ const generateSalt = () => crypto.randomBytes(saltSize);
  * @param {Buffer} salt
  * @return {Buffer}
  */
-const calcHash = (plain, salt) => {
+export const calcHash = (plain, salt) => {
     const normalized = plain.normalize();
     const hash = crypto.scryptSync(normalized, salt, keyLen, {N, maxmem});
     if (!hash) {
@@ -93,5 +94,5 @@ const config = (passport) => {
     };
 };
 
-module.exports = {generateSalt, calcHash, config};
+export default config;
 

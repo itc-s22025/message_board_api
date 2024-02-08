@@ -1,6 +1,6 @@
-const express = require('express');
-const {PrismaClient} = require('@prisma/client');
-const {check, validationResult} = require('express-validator');
+import express from "express";
+import {PrismaClient} from "@prisma/client";
+import {check, validationResult} from "express-validator";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -93,4 +93,4 @@ router.get('/:uid/read', async (req,res,next) => {
     // })
 })
 
-module.exports = router;
+export default router;
