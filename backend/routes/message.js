@@ -5,31 +5,20 @@ const {check, validationResult} = require('express-validator');
 const router = express.Router();
 const prisma = new PrismaClient();
 
+const maxItemCount = 5;
 
+//ログイン状態のチェック
 router.use((req, res, next) => {
     if (!req.user) {
-        //ログインしてないとき
-        res.status(400).json({message: "ログインしてください"});
+        const err = new Error("ログインしてくださいね");
+        err.status = 401;
+        throw err;
+        // //ログインしてないとき
+        // res.status(400).json({message: "ログインしてください"});
     }
     //
     next()
 });
-
-//全データ取得
-// router.get("/all", async (req, res, next) => {
-//     const documents = await prisma.message.findMany({
-//         where: {
-//             userId: +req.user.id
-//         },
-//         orderBy: [
-//             {createddAt: "desc"}
-//         ]
-//     });
-//     res.json({
-//         message: "ok",
-//         documents,
-//     });
-// });
 
 router.post("/create", [
     check("text").notEmpty({ignore_whitespace: true})
@@ -50,30 +39,58 @@ router.post("/create", [
         res.status(201).json({message: "作成できたよ〜"});
     } catch (e) {
         console.log("クリエイトエラー：", e)
+        res.status(400).json({message: "なんかエラーでてるよ〜"})
     }
 
 });
 
 router.get('/read', async (req, res, next) => {
+    // const page = req.query.page ? +req.query.page : 1;
+    // const skip = maxItemCount * (page - 1);
+    // const [message, count] = await Promise.all([
+    // prisma.message.findMany({
+    //     orderBy: {
+    //         updatedAt: 'desc'
+    //     },
+    //     skip,
+    //     take: maxItemCount,
+    //     include: {
+    //         user: true
+    //     },
+    // }),
+    // prisma,message.count()
+    // ]);
+    // const maxPageCount = Math.ceil(count/maxItemCount);
+    // res.json({
+    //     message: "OK",
+    //     message,
+    //     maxPageCount
+    // })
+    const messages = await prisma.message.findMany({
+        orderBy: {
+            updatedAt: 'desc'
+        },
+        include: {
+            user: true
+        },
+    });
+    res.status(200).json(messages);
     try {
-        const messages = await prisma.message.findMany({
-            orderBy: {
-                updatedAt: 'desc'
-            },
-            include: {
-                user: true
-            },
-        });
-        res.status(200).json(messages);
     } catch (error) {
         res.status(500).json({msg: error.msg});
     }
 });
-//
-// router.get("/read", async (req, res, next) => {
-//     const page = req.query.page ? +req.query.page : 1;
-//     // const skip = maxItemCount * (oage -1);
-//     // const [message, count] =
-// })
+
+router.get('/:uid/read', async (req,res,next) => {
+    // const uid = +req.params.uid;
+    // const message =await prisma.message.findMany({
+    //     where: {
+    //         userId: uid
+    //     },
+    //     orderBy: {
+    //         createdAt: "desc"
+    //     }
+    // })
+})
 
 module.exports = router;

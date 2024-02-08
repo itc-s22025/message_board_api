@@ -88,6 +88,7 @@ const Home = () => {
                     } else {
                         throw new Error('クリエイトできてませんけど')
                     }
+                    window.location.href = "/home"
                 }
             )
         } catch (e) {

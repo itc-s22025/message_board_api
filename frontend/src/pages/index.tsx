@@ -10,7 +10,7 @@ const App = () => {
 
     const check = async () => {
         try {
-            const res = await fetch("http://localhost:3030/users/check", {
+            const res = await fetch("http://localhost:3030/users", {
                 method: 'GET',
                 credentials: 'include',
             }).then(

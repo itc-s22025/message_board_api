@@ -74,8 +74,6 @@ const config = (passport) => {
     passport.deserializeUser((user, done) => {
         process.nextTick(() => {
             try {
-                // デシリアライズの処理
-                console.log("Deserialize User:", user);
                 done(null, user);
             } catch (err) {
                 // エラーハンドリング

@@ -61,14 +61,28 @@ app.use((req, res, next) => {
 });
 
 // error handler
-app.use((err, req, res, next) => {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+// app.use((err, req, res, next) => {
+//     // set locals, only providing error in development
+//     res.locals.message = err.message;
+//     res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//     // render the error page
+//     res.status(err.status || 500);
+//     res.render('error');
+// });
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});
+const errorHandler = (err, req, res, next) => {
+    console.dir(err);
+    let message = "Internal server error";
+    if (err.status === 401){
+        //ログインに失敗したとき
+        message = "ログインしてないよ"
+    }else {
+        console.error(err);
+    }
+    res.status(err.status || 500).json({message});
+};
+
+app.use(errorHandler)
 
 module.exports = app;
