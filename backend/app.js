@@ -1,18 +1,21 @@
-const createError = require('http-errors');
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const {config} = require('./util/auth')
-const cors = require('cors');
+import createError from 'http-errors';
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import cors from "cors";
 //
-const session = require('express-session');
-const passport = require('passport');
-const passportConfig = config(passport);
+import session from "express-session";
+import passport from "passport";
+import passportConfig from "./util/auth.js";
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const messagesRouter = require('./routes/message');
+// const indexRouter = require('./routes/index');
+// const usersRouter = require('./routes/users');
+// const messagesRouter = require('./routes/message');
+
+import indexRouter from "./routes/index.js";
+import usersRouter from "./routes/users.js";
+import messagesRouter from "./routes/message.js";
 
 const app = express();
 //cors
@@ -27,14 +30,10 @@ app.use(cors(
 //
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(import.meta.dirname, 'public')));
 
-//axios bypass
-// app.use('/axios', express.static(path.join(
-//     __dirname, "node_modules", "axios", "dist"
-// )));
 
 //sessionの設定
 app.use(session({
@@ -47,7 +46,7 @@ app.use(session({
 //passport
 app.use(passport.authenticate("session"));
 //importしたauth.js
-app.use(passportConfig);
+app.use(passportConfig(passport));
 
 
 app.use('/', indexRouter);
@@ -74,10 +73,10 @@ app.use((req, res, next) => {
 const errorHandler = (err, req, res, next) => {
     console.dir(err);
     let message = "Internal server error";
-    if (err.status === 401){
+    if (err.status === 401) {
         //ログインに失敗したとき
         message = "ログインしてないよ"
-    }else {
+    } else {
         console.error(err);
     }
     res.status(err.status || 500).json({message});
@@ -85,4 +84,4 @@ const errorHandler = (err, req, res, next) => {
 
 app.use(errorHandler)
 
-module.exports = app;
+export default app;

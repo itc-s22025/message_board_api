@@ -3,16 +3,17 @@
 /**
  * Module dependencies.
  */
+import app from "../app.js";
 
-var app = require('../app');
-var debug = require('debug')('message-board-api:server');
-var http = require('http');
+import debug from "debug";
 
+import http from "http";
+
+const logger = debug('message-board-api:server');
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.PORT || '3030');
+const port = normalizePort(process.env.PORT || '3030');
 app.set('port', port);
 
 /**
@@ -86,5 +87,5 @@ function onListening() {
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  logger('Listening on ' + bind);
 }

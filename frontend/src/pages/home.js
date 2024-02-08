@@ -116,6 +116,7 @@ const Home = () => {
 
                 <article>
                     {msgItems}
+                    <button> ⇨ </button>
                 </article>
 
                 <button className={s.logout} onClick={handleLogout}>logout</button>

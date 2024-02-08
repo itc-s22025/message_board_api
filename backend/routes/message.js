@@ -1,11 +1,11 @@
-const express = require('express');
-const {PrismaClient} = require('@prisma/client');
-const {check, validationResult} = require('express-validator');
+import express from "express";
+import {PrismaClient} from "@prisma/client";
+import {check, validationResult} from "express-validator";
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
-const maxItemCount = 5;
+const maxItemCount = 10;
 
 //ログイン状態のチェック
 router.use((req, res, next) => {
@@ -45,9 +45,9 @@ router.post("/create", [
 });
 
 router.get('/read', async (req, res, next) => {
-    // const page = req.query.page ? +req.query.page : 1;
-    // const skip = maxItemCount * (page - 1);
-    // const [message, count] = await Promise.all([
+    const page = req.query.page ? +req.query.page : 1;
+    const skip = maxItemCount * (page - 1);
+    // const [messages, count] = await Promise.all([
     // prisma.message.findMany({
     //     orderBy: {
     //         updatedAt: 'desc'
@@ -58,18 +58,21 @@ router.get('/read', async (req, res, next) => {
     //         user: true
     //     },
     // }),
-    // prisma,message.count()
+    // prisma.message.count()
     // ]);
     // const maxPageCount = Math.ceil(count/maxItemCount);
     // res.json({
     //     message: "OK",
-    //     message,
+    //     messages,
     //     maxPageCount
     // })
+
     const messages = await prisma.message.findMany({
         orderBy: {
             updatedAt: 'desc'
         },
+        skip,
+        take: maxItemCount,
         include: {
             user: true
         },
@@ -82,15 +85,16 @@ router.get('/read', async (req, res, next) => {
 });
 
 router.get('/:uid/read', async (req,res,next) => {
-    // const uid = +req.params.uid;
-    // const message =await prisma.message.findMany({
-    //     where: {
-    //         userId: uid
-    //     },
-    //     orderBy: {
-    //         createdAt: "desc"
-    //     }
-    // })
+    const uid = +req.params.uid;
+    const message =await prisma.message.findMany({
+        where: {
+            userId: uid
+        },
+        orderBy: {
+            createdAt: "desc"
+        }
+    });
+    res.status(200).json(message)
 })
 
-module.exports = router;
+export default router;

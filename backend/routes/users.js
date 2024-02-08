@@ -1,8 +1,8 @@
-const express = require('express');
-const passport = require('passport');
-const { check, validationResult } = require('express-validator');
-const { calcHash, generateSalt } = require('../util/auth');
-const { PrismaClient } = require('@prisma/client');
+import express from "express";
+import passport from "passport";
+import {check, validationResult} from "express-validator";
+import {calcHash, generateSalt} from "../util/auth.js";
+import {PrismaClient} from "@prisma/client";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -111,4 +111,4 @@ router.post("/logout",(req, res, next) => {
   });
 });
 
-module.exports = router;
+export default router;
