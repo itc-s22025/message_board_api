@@ -7,6 +7,7 @@ const Home = () => {
     const [userId, setUserId] = useState()
     const [text, setText] = useState("")
     const [msgs, setMsgs] = useState([])
+    const [searchName, setSearchName] = useState("")
 
     useEffect(() => {
         home()
@@ -43,7 +44,6 @@ const Home = () => {
                 res => res.json()
             ).then(
                 data => {
-                    console.log("DATA->",data)
                     setMsgs(data)
                 }
             )

@@ -47,26 +47,6 @@ router.post("/create", [
 router.get('/read', async (req, res, next) => {
     const page = req.query.page ? +req.query.page : 1;
     const skip = maxItemCount * (page - 1);
-    // const [messages, count] = await Promise.all([
-    // prisma.message.findMany({
-    //     orderBy: {
-    //         updatedAt: 'desc'
-    //     },
-    //     skip,
-    //     take: maxItemCount,
-    //     include: {
-    //         user: true
-    //     },
-    // }),
-    // prisma.message.count()
-    // ]);
-    // const maxPageCount = Math.ceil(count/maxItemCount);
-    // res.json({
-    //     message: "OK",
-    //     messages,
-    //     maxPageCount
-    // })
-
     const messages = await prisma.message.findMany({
         orderBy: {
             updatedAt: 'desc'
@@ -85,16 +65,38 @@ router.get('/read', async (req, res, next) => {
 });
 
 router.get('/:uid/read', async (req,res,next) => {
+    const page = req.query.page ? +req.query.page : 1;
+    const skip = maxItemCount * (page - 1);
     const uid = +req.params.uid;
-    const message =await prisma.message.findMany({
-        where: {
-            userId: uid
-        },
-        orderBy: {
-            createdAt: "desc"
-        }
+    const [messages, user, count] = await Promise.all([
+        prisma.message.findMany({
+            where: {
+                userId: uid
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
+            skip,
+            take: maxItemCount
+        }),
+        prisma.user.findUnique({
+            where: {
+                id: uid
+            }
+        }),
+        prisma.message.count({
+            where: {
+                userId: uid
+            }
+        })
+    ]);
+    const maxPageCount = Math.ceil(count / maxItemCount);
+    res.json({
+        message: "OK",
+        messages,
+        user,
+        maxPageCount
     });
-    res.status(200).json(message)
 })
 
 export default router;
